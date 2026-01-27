@@ -32,8 +32,16 @@ HERO_DATE_TEXT = "22 MARZO, 2026"
 
 INTRO_TITLE = "¡Nos Casamos!"
 INTRO_TEXT = (
-    "Después de compartir una hermosa historia de amor, "
-    "nos complace invitarte a celebrar el comienzo de una nueva etapa en nuestras vidas..."
+    "Después de escribir juntos una hermosa historia de amor, "
+    "con el corazón lleno de gratitud compartimos esta gran noticia.\n\n"
+    
+    "Dios, en Su perfecto tiempo, unió nuestros caminos, "
+    "fortaleció nuestra unión y nos enseñó a amar con fe. "
+    "Bajo Su bendición, decidimos unir nuestras vidas "
+    "y comenzar una nueva etapa.\n\n"
+
+
+    "Nos complace invitarte a celebrar el comienzo de una nueva etapa en nuestras vidas..."
 )
 
 PARENTS_NOVIO = ["Jesús Tejeda", "Evelin Sanchez"]
@@ -223,6 +231,54 @@ html, body, [class*="css"] {{
 .icon-big {{
   font-size: 36px;
   line-height: 1;
+}}
+
+/* ✅ RSVP form styling (transparent card + form look) */
+div[data-testid="stForm"] {{
+  background: transparent !important;
+  border: 1px solid rgba(245,240,232,0.22);
+  border-radius: 18px;
+  padding: 18px 18px 14px 18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+}}
+
+div[data-testid="stForm"] label {{
+  color: rgba(245,240,232,0.92) !important;
+  font-style: italic;
+  font-size: 16px;
+}}
+
+div[data-testid="stTextInput"] input,
+div[data-testid="stTextArea"] textarea,
+div[data-testid="stSelectbox"] div[data-baseweb="select"] > div,
+div[data-testid="stNumberInput"] input {{
+  background: rgba(255,255,255,0.10) !important;
+  color: rgba(245,240,232,0.95) !important;
+  border: 1px solid rgba(245,240,232,0.20) !important;
+  border-radius: 12px !important;
+}}
+
+div[data-testid="stTextArea"] textarea {{
+  min-height: 140px !important;
+}}
+
+div[data-testid="stSelectbox"] svg {{
+  fill: rgba(245,240,232,0.9) !important;
+}}
+
+div[data-testid="stFormSubmitButton"] button {{
+  width: 100% !important;
+  background: rgba(215,194,154,0.78) !important;
+  color: #111 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.65rem 1rem !important;
+  font-weight: 700 !important;
+}}
+
+div[data-testid="stFormSubmitButton"] button:hover {{
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }}
 
 /* =========================
@@ -778,7 +834,6 @@ with c2:
 # DRESS CODE ✅ (icons rendered correctly)
 # =========================================================
 DRESS_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Dress outline -->
   <path d="M22 18
            Q26 12 32 12
            Q38 12 42 18
@@ -792,16 +847,12 @@ DRESS_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"
         stroke-width="2.8"
         stroke-linecap="round"
         stroke-linejoin="round"/>
-
-  <!-- Neckline accent -->
   <path d="M27 16 Q32 19 37 16"
         fill="none"
         stroke="{THEME_ACCENT}"
         stroke-width="2.2"
         stroke-linecap="round"
         opacity="0.95"/>
-
-  <!-- Waistline accent -->
   <path d="M26 26 Q32 30 38 26"
         fill="none"
         stroke="{THEME_ACCENT}"
@@ -809,7 +860,6 @@ DRESS_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"
         stroke-linecap="round"
         opacity="0.9"/>
 </svg>"""
-
 
 TUX_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 <path d="M26 12h12" fill="none" stroke="{THEME_TEXT}" stroke-width="2.6" stroke-linecap="round"/>
@@ -845,7 +895,6 @@ st.markdown(
 </div>""").lstrip(),
     unsafe_allow_html=True,
 )
-
 
 # =========================================================
 # GALLERY SLIDER (✅ carousel)
@@ -1025,7 +1074,7 @@ else:
     )
 
 # =========================================================
-# RSVP FORM
+# RSVP FORM  ✅ (dynamic enable/disable)
 # =========================================================
 st.markdown(
     f"""
@@ -1039,22 +1088,57 @@ st.markdown(
 left_sp, form_col, right_sp = st.columns([1, 2, 1], gap="large")
 with form_col:
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    with st.form("rsvp_form", clear_on_submit=False):
-        nombre = st.text_input("Nombre", value="")
-        invitados = st.number_input("Invitados", min_value=0, max_value=20, value=0, step=1)
-        submitted = st.form_submit_button("Confirmar Asistencia")
 
-    if submitted:
-        msg = (
-            f"Hola! Soy {nombre.strip() or '___'}. "
-            f"Confirmo mi asistencia a la boda de {COUPLE_1} & {COUPLE_2}. "
-            f"Invitados: {int(invitados)}."
-        )
-        link = wa_link(WHATSAPP_E164, msg)
-        st.success("Listo ✅ Ahora para terminar abre WhatsApp y manda el mensaje de confirmación prellenado:")
-        st.link_button("Abrir WhatsApp", link, use_container_width=True)
+    nombre = st.text_input("Nombre", value="", key="rsvp_nombre")
+
+    asistencia = st.selectbox(
+        "¿Asistirás?",
+        ["Selecciona una opción", "Sí", "No"],
+        index=0,
+        key="rsvp_asistencia",
+    )
+
+    personas = st.selectbox(
+        "¿Cuántas personas asistirán?",
+        ["Selecciona el número de personas"] + [str(i) for i in range(1, 11)],
+        index=0,
+        disabled=(asistencia != "Sí"),  # ✅ NOW this updates immediately
+        key="rsvp_personas",
+    )
+
+    comentarios = st.text_area(
+        "Comentarios y Felicitaciones",
+        value="",
+        height=140,
+        key="rsvp_comentarios",
+    )
+
+    confirmar = st.button("Confirmar", key="rsvp_confirmar")
+
+    if confirmar:
+        if not nombre.strip():
+            st.warning("Por favor escribe tu nombre.")
+        elif asistencia == "Selecciona una opción":
+            st.warning("Por favor selecciona si asistirás.")
+        elif asistencia == "Sí" and personas == "Selecciona el número de personas":
+            st.warning("Por favor selecciona el número de personas.")
+        else:
+            n_personas = int(personas) if asistencia == "Sí" else 0
+
+            msg = (
+                f"Hola! Soy {nombre.strip()}. "
+                f"Confirmación de asistencia: {asistencia}. "
+                f"Personas: {n_personas}."
+            )
+            if comentarios.strip():
+                msg += f" Comentarios: {comentarios.strip()}"
+
+            link = wa_link(WHATSAPP_E164, msg)
+            st.success("Listo ✅ Ahora para terminar abre WhatsApp y manda el mensaje de confirmación prellenado:")
+            st.link_button("Abrir WhatsApp", link, use_container_width=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
+
 
 # =========================================================
 # FOOTER
