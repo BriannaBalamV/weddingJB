@@ -38,7 +38,7 @@ INTRO_TEXT = (
 
 PARENTS_NOVIO = ["Jesús Tejeda", "Evelin Sanchez"]
 PARENTS_NOVIA = ["Vladimir Balam", "Enalyn Velasco"]
-PADRINOS = ["si", "si"]
+PADRINOS = ["Dalyn Velasco Pérez", "si"]
 
 CEREMONIA = EventInfo(
     title="Ceremonia y Recepción",
@@ -153,10 +153,11 @@ gal_uris = [data_uri(p) for p in gal_paths]
 st.markdown(
     f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;800&family=Montserrat:wght@300;400;600&display=swap');
+/* ✅ Wedding invitation fonts (apply to ALL invitation) */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
 
 html, body, [class*="css"] {{
-  font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-family: 'Cormorant Garamond', serif;
 }}
 
 .stApp {{
@@ -165,7 +166,6 @@ html, body, [class*="css"] {{
   background-attachment: fixed;
   background-position: center center;
   background-repeat: no-repeat;
-
 }}
 
 .section {{
@@ -176,7 +176,7 @@ html, body, [class*="css"] {{
 }}
 
 .h-serif {{
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cinzel', serif;
   color: {THEME_TEXT};
 }}
 
@@ -221,9 +221,149 @@ html, body, [class*="css"] {{
   font-size: 36px;
   line-height: 1;
 }}
+
+/* =========================
+   Fancy scroll animations
+   ========================= */
+@media (prefers-reduced-motion: reduce) {{
+  .reveal-target,
+  .reveal-target.reveal-in,
+  .reveal-child,
+  .reveal-in .reveal-child {{
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }}
+}}
+
+.reveal-target {{
+  opacity: 0;
+  transform: translateY(22px) scale(0.985);
+  filter: blur(8px);
+  transition:
+    opacity 850ms cubic-bezier(.2,.8,.2,1),
+    transform 850ms cubic-bezier(.2,.8,.2,1),
+    filter 900ms cubic-bezier(.2,.8,.2,1);
+  will-change: opacity, transform, filter;
+}}
+
+.reveal-target.reveal-in {{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}}
+
+.reveal-left {{
+  transform: translateX(-26px) translateY(10px) scale(0.985);
+}}
+.reveal-right {{
+  transform: translateX(26px) translateY(10px) scale(0.985);
+}}
+.reveal-pop {{
+  transform: translateY(18px) scale(0.97);
+}}
+
+.reveal-child {{
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(6px);
+  transition:
+    opacity 650ms cubic-bezier(.2,.8,.2,1),
+    transform 650ms cubic-bezier(.2,.8,.2,1),
+    filter 750ms cubic-bezier(.2,.8,.2,1);
+  transition-delay: var(--d, 0ms);
+  will-change: opacity, transform, filter;
+}}
+
+.reveal-in .reveal-child {{
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}}
+
+.card, .btn-link {{
+  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+}}
+
+.card:hover {{
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.35);
+}}
+
+.btn-link:hover {{
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}}
 </style>
 """,
     unsafe_allow_html=True,
+)
+
+# ✅ Fancy scroll animations JS (targets parent DOM)
+components.html(
+    """
+<script>
+(function () {
+  try {
+    const doc = window.parent.document;
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("reveal-in");
+          obs.unobserve(e.target);
+        }
+      });
+    }, {
+      threshold: 0.14,
+      rootMargin: "0px 0px -12% 0px"
+    });
+
+    function staggerChildren(el) {
+      const kids = Array.from(el.querySelectorAll(":scope > *"));
+      kids.forEach((k, i) => {
+        k.classList.add("reveal-child");
+        k.style.setProperty("--d", `${Math.min(i, 8) * 90}ms`);
+      });
+    }
+
+    function setup() {
+      const sections = Array.from(doc.querySelectorAll(".section"));
+      const cards = Array.from(doc.querySelectorAll(".card"));
+
+      sections.forEach((el, i) => {
+        if (!el.classList.contains("reveal-target")) {
+          el.classList.add("reveal-target");
+          el.classList.add(i % 2 === 0 ? "reveal-left" : "reveal-right");
+          staggerChildren(el);
+          obs.observe(el);
+        }
+      });
+
+      cards.forEach((el) => {
+        if (!el.classList.contains("reveal-target")) {
+          el.classList.add("reveal-target", "reveal-pop");
+          staggerChildren(el);
+          obs.observe(el);
+        }
+      });
+    }
+
+    setup();
+    setTimeout(setup, 450);
+    setTimeout(setup, 1200);
+
+    const mo = new MutationObserver(() => setup());
+    mo.observe(doc.body, { childList: true, subtree: true });
+
+  } catch (err) {
+    console.warn("Fancy scroll reveal init failed:", err);
+  }
+})();
+</script>
+""",
+    height=1,
 )
 
 # =========================================================
@@ -257,7 +397,7 @@ else:
 
         text-align:center; padding: 20px;
       ">
-        <div style="font-family:'Playfair Display',serif; font-size: clamp(44px, 6vw, 92px); font-weight:800; color:{THEME_TEXT}; letter-spacing:1px;">
+        <div style="font-family:'Cinzel',serif; font-size: clamp(44px, 6vw, 92px); font-weight:700; color:{THEME_TEXT}; letter-spacing:1px;">
           {COUPLE_1} <span style="color:{THEME_ACCENT}; font-weight:600;">&</span> {COUPLE_2}
         </div>
 
@@ -265,7 +405,7 @@ else:
           {HERO_SUBTITLE}
         </div>
 
-        <div style="margin-top:14px; font-family:'Playfair Display',serif; font-size: 18px; color: rgba(245,240,232,0.95);">
+        <div style="margin-top:14px; font-size: 20px; color: rgba(245,240,232,0.95);">
           {HERO_DATE_TEXT}
         </div>
 
@@ -368,8 +508,8 @@ st.markdown(
     f"""
 <div class="section">
   <div class="small-center">
-    <div class="h-serif" style="font-size:56px; font-weight:800;">{INTRO_TITLE}</div>
-    <div class="p-muted" style="max-width: 900px; margin: 14px auto 0; font-size:16px;">
+    <div class="h-serif" style="font-size:56px; font-weight:700;">{INTRO_TITLE}</div>
+    <div class="p-muted" style="max-width: 900px; margin: 14px auto 0; font-size:18px;">
       {INTRO_TEXT}
     </div>
   </div>
@@ -379,12 +519,103 @@ st.markdown(
 )
 
 # =========================================================
-# STORY + COUNTDOWN (center)
+# STORY + CALENDAR + COUNTDOWN (center)
 # =========================================================
 countdown_html = f"""
 <style>
   html, body {{ margin:0; padding:0; }}
+
+  .cal-title {{
+    text-align:center;
+    font-family:'Cinzel',serif;
+    color: {THEME_TEXT};
+    margin-bottom: 10px;
+  }}
+  .cal-title .big {{
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1;
+  }}
+  .cal-title .small {{
+    font-size: 28px;
+    font-weight: 400;
+    opacity: .95;
+  }}
+
+  .cal-box {{
+    width:100%;
+    max-width: 520px;
+    margin: 0 auto 14px auto;
+    padding: 14px 14px 10px 14px;
+    box-sizing: border-box;
+    border: 2px solid rgba(215,194,154,0.55);
+    border-radius: 14px;
+    background: rgba(0,0,0,0.18);
+  }}
+
+  .dow {{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+    font-family:'Cormorant Garamond',serif;
+    color: rgba(245,240,232,0.85);
+    font-size: 14px;
+    letter-spacing: .6px;
+    text-align:center;
+  }}
+
+  .grid {{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }}
+
+  .cell {{
+    height: 34px;
+    border-radius: 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Cormorant Garamond',serif;
+    color: rgba(245,240,232,0.92);
+    font-size: 15px;
+    background: rgba(255,255,255,0.03);
+  }}
+
+  .empty {{
+    background: transparent;
+  }}
+
+  .target {{
+    position: relative;
+    border: 2px solid rgba(215,194,154,0.95);
+    background: rgba(215,194,154,0.10);
+    font-weight: 600;
+  }}
+
+  .target::after {{
+    content: "♡";
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    font-size: 14px;
+    color: rgba(215,194,154,0.95);
+  }}
 </style>
+
+<div class="cal-title">
+  <div class="big" id="calDay">--</div>
+  <div class="small"><span id="calMonthName">--</span> <span style="opacity:.85;">de</span> <span id="calYear">----</span></div>
+</div>
+
+<div class="cal-box">
+  <div class="dow">
+    <div>Lu</div><div>Ma</div><div>Mi</div><div>Ju</div><div>Vi</div><div>Sá</div><div>Do</div>
+  </div>
+  <div class="grid" id="calGrid"></div>
+</div>
+
 <div style="
   width:100%;
   max-width: 520px;
@@ -395,22 +626,53 @@ countdown_html = f"""
   padding: 14px 10px;
   background: rgba(0,0,0,0.25);
   color: {THEME_TEXT};
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cinzel', serif;
 ">
   <div style="display:flex; justify-content:space-around; gap:10px; text-align:center;">
-    <div><div id="d" style="font-size:26px; font-weight:800;">--</div><div style="opacity:.9;">Días</div></div>
-    <div><div id="h" style="font-size:26px; font-weight:800;">--</div><div style="opacity:.9;">Hrs</div></div>
-    <div><div id="m" style="font-size:26px; font-weight:800;">--</div><div style="opacity:.9;">Mins</div></div>
-    <div><div id="s" style="font-size:26px; font-weight:800;">--</div><div style="opacity:.9;">Segs</div></div>
+    <div><div id="d" style="font-size:26px; font-weight:700;">--</div><div style="opacity:.9;">Días</div></div>
+    <div><div id="h" style="font-size:26px; font-weight:700;">--</div><div style="opacity:.9;">Hrs</div></div>
+    <div><div id="m" style="font-size:26px; font-weight:700;">--</div><div style="opacity:.9;">Mins</div></div>
+    <div><div id="s" style="font-size:26px; font-weight:700;">--</div><div style="opacity:.9;">Segs</div></div>
   </div>
 </div>
 
 <script>
-  const target = new Date("{EVENT_DATE_TIME.replace(" ", "T")}").getTime();
+  const targetDate = new Date("{EVENT_DATE_TIME.replace(" ", "T")}");
+  const targetMs = targetDate.getTime();
+
+  const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+  const y = targetDate.getFullYear();
+  const m = targetDate.getMonth();
+  const day = targetDate.getDate();
+
+  document.getElementById("calDay").innerText = String(day).padStart(2,"0");
+  document.getElementById("calMonthName").innerText = monthNames[m];
+  document.getElementById("calYear").innerText = y;
+
+  const first = new Date(y, m, 1);
+  const startDow = (first.getDay() + 6) % 7;
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+  const grid = document.getElementById("calGrid");
+  grid.innerHTML = "";
+
+  for (let i=0; i<startDow; i++) {{
+    const div = document.createElement("div");
+    div.className = "cell empty";
+    grid.appendChild(div);
+  }}
+
+  for (let d=1; d<=daysInMonth; d++) {{
+    const div = document.createElement("div");
+    div.className = "cell" + (d === day ? " target" : "");
+    div.innerText = d;
+    grid.appendChild(div);
+  }}
 
   function tick() {{
     const now = new Date().getTime();
-    let diff = Math.max(0, target - now);
+    let diff = Math.max(0, targetMs - now);
 
     const days = Math.floor(diff / (1000*60*60*24));
     diff -= days * (1000*60*60*24);
@@ -438,7 +700,7 @@ with colL:
     else:
         st.info("Add story_left.jpg/.jpeg/.png/.webp in assets/")
 with colC:
-    components.html(countdown_html, height=210)
+    components.html(countdown_html, height=720)
 with colR:
     if right_uri:
         st.image(right_uri, use_container_width=True)
@@ -450,7 +712,7 @@ with colR:
 # =========================================================
 st.markdown(
 f"""<div class="section">
-<div class="h-serif small-center" style="font-size:42px; font-weight:700;">
+<div class="h-serif small-center" style="font-size:42px; font-weight:600;">
 ¡Celebra con nosotros este día tan maravilloso!
 </div>
 
@@ -459,22 +721,22 @@ f"""<div class="section">
 <div style="display:flex; gap:20px; justify-content:space-between; flex-wrap:wrap; margin-top: 10px;">
 
 <div style="flex:1; min-width: 220px; text-align:center;">
-<div class="h-serif" style="font-size:22px; font-weight:700;">Padres de la Novia</div>
-<div class="p-muted" style="margin-top:10px; font-size:16px;">
+<div class="h-serif" style="font-size:22px; font-weight:600;">Padres de la Novia</div>
+<div class="p-muted" style="margin-top:10px; font-size:18px;">
 {PARENTS_NOVIA[0]}<br><span class="gold">&</span><br>{PARENTS_NOVIA[1]}
 </div>
 </div>
 
 <div style="flex:1; min-width: 220px; text-align:center;">
-<div class="h-serif" style="font-size:22px; font-weight:700;">Padres del Novio</div>
-<div class="p-muted" style="margin-top:10px; font-size:16px;">
+<div class="h-serif" style="font-size:22px; font-weight:600;">Padres del Novio</div>
+<div class="p-muted" style="margin-top:10px; font-size:18px;">
 {PARENTS_NOVIO[0]}<br><span class="gold">&</span><br>{PARENTS_NOVIO[1]}
 </div>
 </div>
 
 <div style="flex:1; min-width: 220px; text-align:center;">
-<div class="h-serif" style="font-size:22px; font-weight:700;">Padrinos</div>
-<div class="p-muted" style="margin-top:10px; font-size:16px;">
+<div class="h-serif" style="font-size:22px; font-weight:600;">Padrinos</div>
+<div class="p-muted" style="margin-top:10px; font-size:18px;">
 {PADRINOS[0]}<br><span class="gold">&</span><br>{PADRINOS[1]}
 </div>
 </div>
@@ -493,10 +755,10 @@ with c2:
         f"""
 <div class="card small-center">
   <div class="icon-big">🥂</div>
-  <div style="font-family:'Playfair Display',serif; font-size:28px; font-weight:800; margin-top:6px;">
+  <div class="h-serif" style="font-size:28px; font-weight:600; margin-top:6px;">
     {RECEPCION.title}
   </div>
-  <div style="margin-top:12px; font-size:16px;">
+  <div style="margin-top:12px; font-size:18px;">
     <div><b>{RECEPCION.date_str}</b></div>
     <div style="margin-top:2px;">{RECEPCION.time_str}</div>
     <div style="margin-top:12px;">{RECEPCION.place}</div>
@@ -515,8 +777,8 @@ with c2:
 st.markdown(
     f"""
 <div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:800;">Código de Vestimenta</div>
-  <div class="small-center p-muted" style="margin-top: 10px; font-size:18px;">
+  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">Código de Vestimenta</div>
+  <div class="small-center p-muted" style="margin-top: 10px; font-size:20px;">
     <b style="color:{THEME_TEXT};">{DRESS_CODE}</b><br>
     {DRESS_NOTE}
   </div>
@@ -552,7 +814,7 @@ if gal_uris:
 
       .viewport {{
         width: 100%;
-        height: clamp(320px, 50vw, 560px);   /* ✅ FIXED: clamp (not lamp) */
+        height: clamp(320px, 50vw, 560px);
         border-radius: 16px;
         overflow: hidden;
         box-shadow: 0 16px 34px rgba(0,0,0,0.30);
@@ -597,7 +859,7 @@ if gal_uris:
         background: rgba(0,0,0,0.55);
         color: white;
         font-size: 26px;
-        z-index: 99999;   /* ✅ always on top */
+        z-index: 99999;
       }}
       .prev {{ left: 18px; }}
       .next {{ right: 18px; }}
@@ -627,7 +889,6 @@ if gal_uris:
           {slides}
         </div>
 
-        <!-- ✅ MOVED INSIDE viewport so they overlay the image -->
         <button class="navbtn prev" id="prevBtn">‹</button>
         <button class="navbtn next" id="nextBtn">›</button>
       </div>
@@ -680,12 +941,11 @@ if gal_uris:
     </script>
     """
 
-
     st.markdown(
         f"""
 <div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:800;">Galería</div>
-  <div class="small-center p-muted" style="margin-top: 10px;">{THANKS_TEXT}</div>
+  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">Galería</div>
+  <div class="small-center p-muted" style="margin-top: 10px; font-size:20px;">{THANKS_TEXT}</div>
 </div>
 """,
         unsafe_allow_html=True,
@@ -695,7 +955,7 @@ else:
     st.markdown(
         """
 <div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:800;">Galería</div>
+  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">Galería</div>
   <div class="small-center p-muted" style="margin-top: 10px;">
     Agrega fotos en /assets con nombres como: gallery1.jpg / gallery2.png / gallery3.jpeg ...
   </div>
@@ -710,7 +970,7 @@ else:
 st.markdown(
     f"""
 <div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:800;">{RSVP_TITLE} <span class="gold">🟢</span></div>
+  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">{RSVP_TITLE} <span class="gold">🟢</span></div>
 </div>
 """,
     unsafe_allow_html=True,
@@ -743,7 +1003,7 @@ st.markdown(
     f"""
 <div class="section small-center" style="padding: 26px 16px;">
   <div class="p-muted">{FOOTER_LINE_1}</div>
-  <div class="h-serif" style="font-size:22px; font-weight:700;">{FOOTER_LINE_2}</div>
+  <div class="h-serif" style="font-size:22px; font-weight:600;">{FOOTER_LINE_2}</div>
   <div style="margin-top:10px; opacity:0.6; font-size:12px;">© {datetime.now().year}</div>
 </div>
 """,
