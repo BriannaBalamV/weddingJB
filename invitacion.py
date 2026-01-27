@@ -51,8 +51,11 @@ CEREMONIA = EventInfo(
 # ✅ FIX: RECEPCION was referenced later but not defined
 RECEPCION = CEREMONIA
 
-DRESS_CODE = "Formal"
-DRESS_NOTE = "Evitar color blanco (opcional)."
+# ✅ UPDATED ONLY: Dress code content (as requested)
+DRESS_CODE = "<b>ETIQUETA</b>"
+DRESS_NOTE = (
+    "El color <b>blanco</b> esta reservado para la novia.<br><br>"
+)
 
 WHATSAPP_E164 = "52" + "9991943438"  # digits only, no '+' and no spaces
 RSVP_TITLE = "Confirmación de Asistencia al Evento"
@@ -772,20 +775,77 @@ with c2:
     )
 
 # =========================================================
-# DRESS CODE
+# DRESS CODE ✅ (icons rendered correctly)
 # =========================================================
+DRESS_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Dress outline -->
+  <path d="M22 18
+           Q26 12 32 12
+           Q38 12 42 18
+           L38 26
+           L44 54
+           Q32 58 20 54
+           L26 26
+           Z"
+        fill="none"
+        stroke="{THEME_TEXT}"
+        stroke-width="2.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Neckline accent -->
+  <path d="M27 16 Q32 19 37 16"
+        fill="none"
+        stroke="{THEME_ACCENT}"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        opacity="0.95"/>
+
+  <!-- Waistline accent -->
+  <path d="M26 26 Q32 30 38 26"
+        fill="none"
+        stroke="{THEME_ACCENT}"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        opacity="0.9"/>
+</svg>"""
+
+
+TUX_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<path d="M26 12h12" fill="none" stroke="{THEME_TEXT}" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M26 12l6 10 6-10" fill="none" stroke="{THEME_ACCENT}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20 20l6-8 6 10-6 10-6-8" fill="none" stroke="{THEME_TEXT}" stroke-width="2.6" stroke-linejoin="round"/>
+<path d="M44 20l-6-8-6 10 6 10 6-8" fill="none" stroke="{THEME_TEXT}" stroke-width="2.6" stroke-linejoin="round"/>
+<path d="M28 22v30c0 2 8 2 8 0V22" fill="none" stroke="{THEME_TEXT}" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M28 32h8" fill="none" stroke="{THEME_ACCENT}" stroke-width="2.2" stroke-linecap="round" opacity="0.9"/>
+<path d="M24 54h16" fill="none" stroke="{THEME_TEXT}" stroke-width="2.6" stroke-linecap="round" opacity="0.9"/>
+</svg>"""
+
+dress_icon_uri = "data:image/svg+xml;base64," + base64.b64encode(DRESS_ICON_SVG.encode("utf-8")).decode("utf-8")
+tux_icon_uri = "data:image/svg+xml;base64," + base64.b64encode(TUX_ICON_SVG.encode("utf-8")).decode("utf-8")
+
 st.markdown(
-    f"""
-<div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">Código de Vestimenta</div>
-  <div class="small-center p-muted" style="margin-top: 10px; font-size:20px;">
-    <b style="color:{THEME_TEXT};">{DRESS_CODE}</b><br>
+    textwrap.dedent(f"""<div class="section">
+  <div class="h-serif small-center" style="font-size:40px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
+    CÓDIGO DE VESTIMENTA.
+  </div>
+
+  <div class="h-serif small-center" style="margin-top:14px; font-size:30px; font-weight:500; letter-spacing:6px; text-transform:uppercase; opacity:.95;">
+    {DRESS_CODE}
+  </div>
+
+  <div style="margin-top:18px; display:flex; justify-content:center; align-items:center; gap:46px;">
+    <img src="{dress_icon_uri}" style="width:96px; height:96px; display:block;" />
+    <img src="{tux_icon_uri}" style="width:96px; height:96px; display:block;" />
+  </div>
+
+  <div class="small-center p-muted" style="margin-top:18px; font-size:22px; line-height:1.25;">
     {DRESS_NOTE}
   </div>
-</div>
-""",
+</div>""").lstrip(),
     unsafe_allow_html=True,
 )
+
 
 # =========================================================
 # GALLERY SLIDER (✅ carousel)
