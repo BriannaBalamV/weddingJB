@@ -731,7 +731,7 @@ with form_col:
             f"Invitados: {int(invitados)}."
         )
         link = wa_link(WHATSAPP_E164, msg)
-        st.success("Listo ✅ Ahora confirma por WhatsApp:")
+        st.success("Listo ✅ Ahora para terminar abre WhatsApp y manda el mensaje de confirmación prellenado:")
         st.link_button("Abrir WhatsApp", link, use_container_width=True)
 
     st.markdown("</div>", unsafe_allow_html=True)
