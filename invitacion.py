@@ -461,7 +461,7 @@ f"""<div class="section">
 <div style="flex:1; min-width: 220px; text-align:center;">
 <div class="h-serif" style="font-size:22px; font-weight:700;">Padres de la Novia</div>
 <div class="p-muted" style="margin-top:10px; font-size:16px;">
-{PARENTS_NOVIA[1]}<br><span class="gold">&</span><br>{PARENTS_NOVIA[0]}
+{PARENTS_NOVIA[0]}<br><span class="gold">&</span><br>{PARENTS_NOVIA[1]}
 </div>
 </div>
 
