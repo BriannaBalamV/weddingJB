@@ -54,7 +54,7 @@ RECEPCION = CEREMONIA
 DRESS_CODE = "Formal"
 DRESS_NOTE = "Evitar color blanco (opcional)."
 
-WHATSAPP_E164 = "52" + "2219683400"  # digits only, no '+' and no spaces
+WHATSAPP_E164 = "52" + "9991943438"  # digits only, no '+' and no spaces
 RSVP_TITLE = "Confirmación de Asistencia al Evento"
 
 THANKS_TEXT = "Muchas gracias por su atención. Esperamos contar con su presencia."
