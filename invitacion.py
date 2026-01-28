@@ -965,7 +965,7 @@ st.markdown(
 st.markdown(
     f"""
 <div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">{RSVP_TITLE} <span class="gold">🟢</span></div>
+  <div class="h-serif small-center" style="font-size:34px; font-weight:600;">{RSVP_TITLE} <span class="gold">🟢</span></div>
 </div>
 """,
     unsafe_allow_html=True,
