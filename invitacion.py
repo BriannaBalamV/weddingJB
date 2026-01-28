@@ -34,7 +34,7 @@ INTRO_TITLE = "¡Nos Casamos!"
 INTRO_TEXT = (
     "Después de escribir juntos una hermosa historia de amor, "
     "con el corazón lleno de gratitud compartimos esta gran noticia.\n\n"
-
+    
     "Dios, en Su perfecto tiempo, unió nuestros caminos, "
     "fortaleció nuestra unión y nos enseñó a amar con fe y bajo Su bendición,"
     "decidimos unir nuestras vidas y comenzar una nueva etapa.\n\n"
@@ -353,83 +353,31 @@ div[data-testid="stFormSubmitButton"] button:hover {{
   filter: brightness(1.05);
 }}
 
-/* ✅ Mobile-friendly: remove dead spaces BETWEEN containers/elements (Safari-safe) */
+/* ✅ FIX MOBILE EMPTY SPACES (ONLY ON PHONE) */
 @media (max-width: 768px) {{
-  /* iOS Safari: fixed background can create weird blank space */
+  /* iOS Safari often creates weird spacing with fixed backgrounds */
   .stApp {{
     background-attachment: scroll !important;
   }}
 
-  /* Streamlit page padding (outer) */
-  .main .block-container {{
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
-    padding-top: 0.6rem !important;
-    padding-bottom: 0.6rem !important;
-  }}
-
-  /* ✅ KEY: Streamlit default vertical gaps between blocks */
+  /* Reduce Streamlit default block gaps */
   div[data-testid="stVerticalBlock"] {{
     gap: 0.35rem !important;
   }}
 
-  /* Many Streamlit widgets are wrapped in .element-container */
+  /* Many Streamlit blocks wrap in element-container with bottom margin */
   .element-container {{
     margin-bottom: 0.35rem !important;
   }}
 
-  /* Reduce extra paragraph spacing in markdown */
-  div[data-testid="stMarkdownContainer"] {{
-    margin-bottom: 0 !important;
-  }}
-  div[data-testid="stMarkdownContainer"] p {{
-    margin: 0.35rem 0 !important;
-  }}
-
-  /* Your sections/cards tighter on mobile */
+  /* Sections tighter on mobile */
   .section {{
     padding: 20px 14px !important;
     margin: 8px 0 !important;
-    border-radius: 18px !important;
-  }}
-
-  .card {{
-    padding: 14px 14px !important;
-    border-radius: 14px !important;
   }}
 
   .hr-soft {{
     margin: 12px 0 !important;
-  }}
-
-  /* ✅ FIX: column gaps when they stack on mobile */
-  div[data-testid="stHorizontalBlock"] {{
-    gap: 0.35rem !important;
-  }}
-
-  div[data-testid="column"] {{
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }}
-
-  /* ✅ FIX: remove extra space from Streamlit iframe wrappers (hero/countdown/gallery) */
-  div[data-testid="stIFrame"] {{
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 0 !important;
-  }}
-
-  div[data-testid="stIFrame"] iframe {{
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    min-height: 0 !important;
-  }}
-
-  /* Images spacing */
-  div[data-testid="stImage"] {{
-    margin-bottom: 0.25rem !important;
   }}
 }}
 </style>
