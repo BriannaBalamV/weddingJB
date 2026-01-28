@@ -36,9 +36,8 @@ INTRO_TEXT = (
     "con el corazón lleno de gratitud compartimos esta gran noticia.\n\n"
     
     "Dios, en Su perfecto tiempo, unió nuestros caminos, "
-    "fortaleció nuestra unión y nos enseñó a amar con fe. "
-    "Bajo Su bendición, decidimos unir nuestras vidas "
-    "y comenzar una nueva etapa.\n\n"
+    "fortaleció nuestra unión y nos enseñó a amar con fe y bajo Su bendición,"
+    "decidimos unir nuestras vidas y comenzar una nueva etapa.\n\n"
 
 
     "Nos complace invitarte a celebrar el comienzo de una nueva etapa en nuestras vidas..."
