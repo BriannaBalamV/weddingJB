@@ -1013,11 +1013,11 @@ with form_col:
 
             msg = (
                 f"Hola! Soy {nombre.strip()}. "
-                f"Confirmación de asistencia: {asistencia}. "
-                f"Personas: {n_personas}."
+                f"\nConfirmación de asistencia a su boda: {asistencia} . "
+                f"\nPersonas: {n_personas}."
             )
             if comentarios.strip():
-                msg += f" Comentarios: {comentarios.strip()}"
+                msg += f"\n\nComentarios: {comentarios.strip()}"
 
             link = wa_link(WHATSAPP_E164, msg)
             st.success("Listo ✅ Ahora para terminar abre WhatsApp y manda el mensaje de confirmación prellenado:")
