@@ -1182,7 +1182,7 @@ if gal_uris:
     st.markdown(
         f"""
 <div class="section">
-  <div class="small-center p-muted" style="margin-top: 10px; font-size:20px;">{THANKS_TEXT}</div>
+  <div class="h-serif small-center" style="margin-top: 10px; font-size:20px;">{THANKS_TEXT}</div>
 </div>
 """,
         unsafe_allow_html=True,
