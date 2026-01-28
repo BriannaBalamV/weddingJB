@@ -39,7 +39,6 @@ INTRO_TEXT = (
     "fortaleció nuestra unión y nos enseñó a amar con fe y bajo Su bendición,"
     "decidimos unir nuestras vidas y comenzar una nueva etapa.\n\n"
 
-
     "Nos complace invitarte a celebrar el comienzo de una nueva etapa en nuestras vidas..."
 )
 
@@ -896,7 +895,138 @@ st.markdown(
 )
 
 # =========================================================
-# GALLERY SLIDER (✅ carousel)
+# REGALOS ✅ (new section)
+# =========================================================
+GIFT_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 130">
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left envelope -->
+    <rect x="22" y="46" width="86" height="58" rx="10" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M22 54 L65 84 L108 54" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M22 104 L60 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+    <path d="M108 104 L70 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+
+    <!-- Heart left -->
+    <path d="M65 75
+             C62 69 54 69 54 76
+             C54 83 65 90 65 90
+             C65 90 76 83 76 76
+             C76 69 68 69 65 75 Z"
+          fill="{THEME_ACCENT}" opacity="0.55" stroke="none"/>
+
+    <!-- Right envelope -->
+    <rect x="132" y="46" width="86" height="58" rx="10" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M132 54 L175 84 L218 54" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M132 104 L170 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+    <path d="M218 104 L180 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+
+    <!-- Heart right -->
+    <path d="M175 75
+             C172 69 164 69 164 76
+             C164 83 175 90 175 90
+             C175 90 186 83 186 76
+             C186 69 178 69 175 75 Z"
+          fill="{THEME_ACCENT}" opacity="0.55" stroke="none"/>
+
+    <!-- Soft outline accent -->
+    <path d="M60 46 Q65 36 75 36" stroke="{THEME_TEXT}" stroke-width="2.0" opacity="0.25"/>
+    <path d="M180 46 Q175 36 165 36" stroke="{THEME_TEXT}" stroke-width="2.0" opacity="0.25"/>
+  </g>
+</svg>"""
+
+gift_icon_uri = "data:image/svg+xml;base64," + base64.b64encode(GIFT_ICON_SVG.encode("utf-8")).decode("utf-8")
+
+st.markdown(
+    textwrap.dedent(f"""<div class="section">
+  <div class="h-serif small-center" style="font-size:48px; font-weight:600;">Regalos</div>
+
+  <div class="small-center p-muted" style="margin-top: 16px; font-size:24px; font-style: italic; line-height: 1.25;">
+    “Tu presencia es el mejor regalo en este día tan especial”
+  </div>
+
+  <div class="small-center p-muted" style="margin-top: 14px; font-size:22px; line-height: 1.25;">
+    Pero si deseas obsequiarnos algo, puedes hacerlo de la siguiente forma:
+  </div>
+
+  <div style="margin-top:22px; display:flex; justify-content:center; align-items:center;">
+    <img src="{gift_icon_uri}" style="width: 260px; max-width: 72%; height:auto; display:block;" />
+  </div>
+
+  <div class="small-center p-muted" style="margin-top: 22px; font-size:22px; line-height: 1.25;">
+    Durante la recepción habrá una caja donde se podrá depositar
+    <b style="color:{THEME_TEXT};">sobrecitos con efectivo</b>.
+  </div>
+</div>""").lstrip(),
+    unsafe_allow_html=True,
+)
+
+# =========================================================
+# RSVP FORM  ✅ (dynamic enable/disable)
+# =========================================================
+st.markdown(
+    f"""
+<div class="section">
+  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">{RSVP_TITLE} <span class="gold">🟢</span></div>
+</div>
+""",
+    unsafe_allow_html=True,
+)
+
+left_sp, form_col, right_sp = st.columns([1, 2, 1], gap="large")
+with form_col:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    nombre = st.text_input("Nombre", value="", key="rsvp_nombre")
+
+    asistencia = st.selectbox(
+        "¿Asistirás?",
+        ["Selecciona una opción", "Sí", "No"],
+        index=0,
+        key="rsvp_asistencia",
+    )
+
+    personas = st.selectbox(
+        "¿Cuántas personas asistirán?",
+        ["Selecciona el número de personas"] + [str(i) for i in range(1, 11)],
+        index=0,
+        disabled=(asistencia != "Sí"),
+        key="rsvp_personas",
+    )
+
+    comentarios = st.text_area(
+        "Comentarios y Felicitaciones",
+        value="",
+        height=140,
+        key="rsvp_comentarios",
+    )
+
+    confirmar = st.button("Confirmar", key="rsvp_confirmar")
+
+    if confirmar:
+        if not nombre.strip():
+            st.warning("Por favor escribe tu nombre.")
+        elif asistencia == "Selecciona una opción":
+            st.warning("Por favor selecciona si asistirás.")
+        elif asistencia == "Sí" and personas == "Selecciona el número de personas":
+            st.warning("Por favor selecciona el número de personas.")
+        else:
+            n_personas = int(personas) if asistencia == "Sí" else 0
+
+            msg = (
+                f"Hola! Soy {nombre.strip()}. "
+                f"Confirmación de asistencia: {asistencia}. "
+                f"Personas: {n_personas}."
+            )
+            if comentarios.strip():
+                msg += f" Comentarios: {comentarios.strip()}"
+
+            link = wa_link(WHATSAPP_E164, msg)
+            st.success("Listo ✅ Ahora para terminar abre WhatsApp y manda el mensaje de confirmación prellenado:")
+            st.link_button("Abrir WhatsApp", link, use_container_width=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# =========================================================
+# GALLERY SLIDER (✅ carousel)  ✅ MOVED: right after RSVP
 # =========================================================
 if gal_uris:
     slides = "".join(
@@ -1052,7 +1182,6 @@ if gal_uris:
     st.markdown(
         f"""
 <div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">Galería</div>
   <div class="small-center p-muted" style="margin-top: 10px; font-size:20px;">{THANKS_TEXT}</div>
 </div>
 """,
@@ -1071,73 +1200,6 @@ else:
 """,
         unsafe_allow_html=True,
     )
-
-# =========================================================
-# RSVP FORM  ✅ (dynamic enable/disable)
-# =========================================================
-st.markdown(
-    f"""
-<div class="section">
-  <div class="h-serif small-center" style="font-size:40px; font-weight:600;">{RSVP_TITLE} <span class="gold">🟢</span></div>
-</div>
-""",
-    unsafe_allow_html=True,
-)
-
-left_sp, form_col, right_sp = st.columns([1, 2, 1], gap="large")
-with form_col:
-    st.markdown('<div class="card">', unsafe_allow_html=True)
-
-    nombre = st.text_input("Nombre", value="", key="rsvp_nombre")
-
-    asistencia = st.selectbox(
-        "¿Asistirás?",
-        ["Selecciona una opción", "Sí", "No"],
-        index=0,
-        key="rsvp_asistencia",
-    )
-
-    personas = st.selectbox(
-        "¿Cuántas personas asistirán?",
-        ["Selecciona el número de personas"] + [str(i) for i in range(1, 11)],
-        index=0,
-        disabled=(asistencia != "Sí"),  # ✅ NOW this updates immediately
-        key="rsvp_personas",
-    )
-
-    comentarios = st.text_area(
-        "Comentarios y Felicitaciones",
-        value="",
-        height=140,
-        key="rsvp_comentarios",
-    )
-
-    confirmar = st.button("Confirmar", key="rsvp_confirmar")
-
-    if confirmar:
-        if not nombre.strip():
-            st.warning("Por favor escribe tu nombre.")
-        elif asistencia == "Selecciona una opción":
-            st.warning("Por favor selecciona si asistirás.")
-        elif asistencia == "Sí" and personas == "Selecciona el número de personas":
-            st.warning("Por favor selecciona el número de personas.")
-        else:
-            n_personas = int(personas) if asistencia == "Sí" else 0
-
-            msg = (
-                f"Hola! Soy {nombre.strip()}. "
-                f"Confirmación de asistencia: {asistencia}. "
-                f"Personas: {n_personas}."
-            )
-            if comentarios.strip():
-                msg += f" Comentarios: {comentarios.strip()}"
-
-            link = wa_link(WHATSAPP_E164, msg)
-            st.success("Listo ✅ Ahora para terminar abre WhatsApp y manda el mensaje de confirmación prellenado:")
-            st.link_button("Abrir WhatsApp", link, use_container_width=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
 
 # =========================================================
 # FOOTER
