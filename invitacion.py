@@ -34,7 +34,7 @@ INTRO_TITLE = "¡Nos Casamos!"
 INTRO_TEXT = (
     "Después de escribir juntos una hermosa historia de amor, "
     "con el corazón lleno de gratitud compartimos esta gran noticia.\n\n"
-
+    
     "Dios, en Su perfecto tiempo, unió nuestros caminos, "
     "fortaleció nuestra unión y nos enseñó a amar con fe y bajo Su bendición,"
     "decidimos unir nuestras vidas y comenzar una nueva etapa.\n\n"
@@ -566,7 +566,7 @@ st.markdown(
 <div class="section">
   <div class="small-center">
     <div class="h-serif" style="font-size:56px; font-weight:700;">{INTRO_TITLE}</div>
-    <div class="p-muted" style="max-width: 900px; margin: 14px auto 0; font-size:18px; white-space: pre-line;">
+    <div class="p-muted" style="max-width: 900px; margin: 14px auto 0; font-size:18px;">
       {INTRO_TEXT}
     </div>
   </div>
@@ -832,30 +832,31 @@ with c2:
 # DRESS CODE ✅ (icons rendered correctly)
 # =========================================================
 DRESS_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Bodice -->
-  <path d="M26 14 Q32 10 38 14" fill="none" stroke="{THEME_TEXT}" stroke-width="2.8" stroke-linecap="round"/>
-  <path d="M24 18 Q32 24 40 18" fill="none" stroke="{THEME_TEXT}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-
-  <!-- Skirt -->
-  <path d="M24 18
-           L28 26
-           L22 52
-           Q32 58 42 52
-           L36 26
-           L40 18"
+  <path d="M22 18
+           Q26 12 32 12
+           Q38 12 42 18
+           L38 26
+           L44 54
+           Q32 58 20 54
+           L26 26
+           Z"
         fill="none"
         stroke="{THEME_TEXT}"
         stroke-width="2.8"
         stroke-linecap="round"
         stroke-linejoin="round"/>
-
-  <!-- Accent lines -->
-  <path d="M28 26 Q32 30 36 26"
+  <path d="M27 16 Q32 19 37 16"
         fill="none"
         stroke="{THEME_ACCENT}"
         stroke-width="2.2"
         stroke-linecap="round"
         opacity="0.95"/>
+  <path d="M26 26 Q32 30 38 26"
+        fill="none"
+        stroke="{THEME_ACCENT}"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        opacity="0.9"/>
 </svg>"""
 
 TUX_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
@@ -894,14 +895,77 @@ st.markdown(
 )
 
 # =========================================================
+# REGALOS ✅ (new section)
+# =========================================================
+GIFT_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 130">
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left envelope -->
+    <rect x="22" y="46" width="86" height="58" rx="10" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M22 54 L65 84 L108 54" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M22 104 L60 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+    <path d="M108 104 L70 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+
+    <!-- Heart left -->
+    <path d="M65 75
+             C62 69 54 69 54 76
+             C54 83 65 90 65 90
+             C65 90 76 83 76 76
+             C76 69 68 69 65 75 Z"
+          fill="{THEME_ACCENT}" opacity="0.55" stroke="none"/>
+
+    <!-- Right envelope -->
+    <rect x="132" y="46" width="86" height="58" rx="10" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M132 54 L175 84 L218 54" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
+    <path d="M132 104 L170 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+    <path d="M218 104 L180 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
+
+    <!-- Heart right -->
+    <path d="M175 75
+             C172 69 164 69 164 76
+             C164 83 175 90 175 90
+             C175 90 186 83 186 76
+             C186 69 178 69 175 75 Z"
+          fill="{THEME_ACCENT}" opacity="0.55" stroke="none"/>
+
+    <!-- Soft outline accent -->
+    <path d="M60 46 Q65 36 75 36" stroke="{THEME_TEXT}" stroke-width="2.0" opacity="0.25"/>
+    <path d="M180 46 Q175 36 165 36" stroke="{THEME_TEXT}" stroke-width="2.0" opacity="0.25"/>
+  </g>
+</svg>"""
+
+gift_icon_uri = "data:image/svg+xml;base64," + base64.b64encode(GIFT_ICON_SVG.encode("utf-8")).decode("utf-8")
+
+st.markdown(
+    textwrap.dedent(f"""<div class="section">
+  <div class="h-serif small-center" style="font-size:48px; font-weight:600;">Regalos</div>
+
+  <div class="small-center p-muted" style="margin-top: 16px; font-size:24px; font-style: italic; line-height: 1.25;">
+    “Tu presencia es el mejor regalo en este día tan especial”
+  </div>
+
+  <div class="small-center p-muted" style="margin-top: 14px; font-size:22px; line-height: 1.25;">
+    Pero si deseas obsequiarnos algo, puedes hacerlo de la siguiente forma:
+  </div>
+
+  <div style="margin-top:22px; display:flex; justify-content:center; align-items:center;">
+    <img src="{gift_icon_uri}" style="width: 260px; max-width: 72%; height:auto; display:block;" />
+  </div>
+
+  <div class="small-center p-muted" style="margin-top: 22px; font-size:22px; line-height: 1.25;">
+    Durante la recepción habrá una caja donde se podrá depositar
+    <b style="color:{THEME_TEXT};">sobrecitos con efectivo</b>.
+  </div>
+</div>""").lstrip(),
+    unsafe_allow_html=True,
+)
+
+# =========================================================
 # RSVP FORM  ✅ (dynamic enable/disable)
 # =========================================================
 st.markdown(
     f"""
 <div class="section">
-  <div class="h-serif small-center" style="font-size: clamp(26px, 4vw, 34px); font-weight:600;">
-    {RSVP_TITLE} <span class="gold">🟢</span>
-  </div>
+  <div class="h-serif small-center" style="font-size:34px; font-weight:600;">{RSVP_TITLE} <span class="gold">🟢</span></div>
 </div>
 """,
     unsafe_allow_html=True,
@@ -949,11 +1013,11 @@ with form_col:
 
             msg = (
                 f"Hola! Soy {nombre.strip()}. "
-                f"Confirmación de asistencia: {asistencia}. "
-                f"Personas: {n_personas}."
+                f"\nConfirmación de asistencia a su boda: {asistencia} . "
+                f"\nPersonas: {n_personas}."
             )
             if comentarios.strip():
-                msg += f" Comentarios: {comentarios.strip()}"
+                msg += f"\n\nComentarios: {comentarios.strip()}"
 
             link = wa_link(WHATSAPP_E164, msg)
             st.success("Listo ✅ Ahora para terminar abre WhatsApp y manda el mensaje de confirmación prellenado:")
@@ -962,7 +1026,7 @@ with form_col:
     st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
-# GALLERY SLIDER (✅ carousel)  ✅ NOW placed after RSVP
+# GALLERY SLIDER (✅ carousel)  ✅ MOVED: right after RSVP
 # =========================================================
 if gal_uris:
     slides = "".join(
@@ -1079,18 +1143,6 @@ if gal_uris:
 
       let idx = 0;
 
-      // ✅ Auto-fit Streamlit iframe height to content (removes the big gap on mobile)
-      function sendHeight() {{
-        const h = Math.max(
-          document.body.scrollHeight,
-          document.documentElement.scrollHeight
-        );
-        window.parent.postMessage(
-          {{ isStreamlitMessage: true, type: "streamlit:setFrameHeight", height: h }},
-          "*"
-        );
-      }}
-
       function renderDots() {{
         dotsDiv.innerHTML = "";
         slideEls.forEach((_, i) => {{
@@ -1107,7 +1159,6 @@ if gal_uris:
       function render() {{
         track.style.transform = `translateX(${{-idx * 100}}%)`;
         renderDots();
-        setTimeout(sendHeight, 60);
       }}
 
       function move(step) {{
@@ -1124,17 +1175,7 @@ if gal_uris:
         if (e.key === "ArrowRight") move(1);
       }});
 
-      // update height when images load
-      slideEls.forEach((s) => {{
-        const img = s.querySelector("img");
-        if (!img) return;
-        img.addEventListener("load", () => setTimeout(sendHeight, 60));
-      }});
-
-      window.addEventListener("resize", () => setTimeout(sendHeight, 80));
-
       render();
-      setTimeout(sendHeight, 120);
     </script>
     """
 
