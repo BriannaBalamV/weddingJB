@@ -1206,7 +1206,7 @@ else:
 # =========================================================
 st.markdown(
     f"""
-<div class="section small-center" style="padding: 26px 16px;">
+<div class="section small-center" style="padding: 8px 16px;">
   <div class="p-muted">{FOOTER_LINE_1}</div>
   <div class="h-serif" style="font-size:22px; font-weight:600;">{FOOTER_LINE_2}</div>
   <div style="margin-top:10px; opacity:0.6; font-size:12px;">© {datetime.now().year}</div>
