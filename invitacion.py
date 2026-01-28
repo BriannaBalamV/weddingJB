@@ -769,7 +769,7 @@ with colR:
 # =========================================================
 st.markdown(
 f"""<div class="section">
-<div class="h-serif small-center" style="font-size:42px; font-weight:600;">
+<div class="h-serif small-center" style="font-size:35px; font-weight:600;">
 ¡Celebra con nosotros este día tan maravilloso!
 </div>
 
