@@ -143,17 +143,18 @@ def audio_uri_mp3(path: Path) -> str:
 def wa_link(phone_e164: str, msg: str) -> str:
     return f"https://wa.me/{phone_e164}?text={quote(msg)}"
 
-# ✅ ADDED: Auto-resize script (This helps fix gaps if supported)
-AUTO_RESIZE_SCRIPT = """
+# ✅ NEW: Safe Resize Script (Only for Countdown & Gallery)
+RESIZE_JS = """
 <script>
-  function resizeIframe() {
-    const body = document.body;
-    const height = body.scrollHeight;
+  function sendHeight() {
+    const height = document.body.scrollHeight;
     window.parent.postMessage({type: 'streamlit:setFrameHeight', height: height}, '*');
   }
-  window.addEventListener('load', resizeIframe);
-  window.addEventListener('resize', resizeIframe);
-  setTimeout(resizeIframe, 300);
+  // Listen for load and changes
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  // Robust check for dynamic content
+  new ResizeObserver(sendHeight).observe(document.body);
 </script>
 """
 
@@ -597,8 +598,8 @@ else:
       </script>
     </div>
     """
-    # ✅ FIX: height=600 (RESTORED) + append auto-resize script
-    components.html(hero_html + AUTO_RESIZE_SCRIPT, height=600)
+    # ✅ NO CHANGE to HERO height or script (avoids deletion issue)
+    components.html(hero_html, height=600)
 
 # =========================================================
 # INTRO
@@ -799,8 +800,8 @@ with colL:
     else:
         st.info("Add story_left.jpg/.jpeg/.png/.webp in assets/")
 with colC:
-    # ✅ FIX: height=720 (RESTORED) + append auto-resize script
-    components.html(countdown_html + AUTO_RESIZE_SCRIPT, height=720)
+    # ✅ APPEND RESIZE_JS to fix gaps on mobile (but keep desktop height)
+    components.html(countdown_html + RESIZE_JS, height=720)
 with colR:
     if right_uri:
         st.image(right_uri, use_container_width=True)
@@ -1225,8 +1226,8 @@ if gal_uris:
 """,
         unsafe_allow_html=True,
     )
-    # ✅ FIX: height=560 (RESTORED) + append auto-resize script
-    components.html(gallery_html + AUTO_RESIZE_SCRIPT, height=560)
+    # ✅ APPEND RESIZE_JS to fix gaps on mobile
+    components.html(gallery_html + RESIZE_JS, height=560)
 else:
     st.markdown(
         """
