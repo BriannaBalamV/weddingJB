@@ -143,18 +143,20 @@ def audio_uri_mp3(path: Path) -> str:
 def wa_link(phone_e164: str, msg: str) -> str:
     return f"https://wa.me/{phone_e164}?text={quote(msg)}"
 
-# ✅ NEW: Safe Resize Script (Only for Countdown & Gallery)
-RESIZE_JS = """
+
+# ✅ NEW: Script to expand height if content is larger than default
+AUTO_RESIZE_SCRIPT = """
 <script>
-  function sendHeight() {
+  function resizeIframe() {
+    // Get the exact height of the content
     const height = document.body.scrollHeight;
+    // Send it to Streamlit to resize the container
     window.parent.postMessage({type: 'streamlit:setFrameHeight', height: height}, '*');
   }
-  // Listen for load and changes
-  window.addEventListener('load', sendHeight);
-  window.addEventListener('resize', sendHeight);
-  // Robust check for dynamic content
-  new ResizeObserver(sendHeight).observe(document.body);
+  // Check often to ensure it resizes correctly
+  window.addEventListener('load', resizeIframe);
+  window.addEventListener('resize', resizeIframe);
+  setInterval(resizeIframe, 500);
 </script>
 """
 
@@ -374,14 +376,19 @@ div[data-testid="stFormSubmitButton"] button:hover {{
     background-attachment: scroll !important;
   }}
 
-  /* Reduce Streamlit default block gaps */
+  /* Reduce Streamlit default block gaps to 0 */
   div[data-testid="stVerticalBlock"] {{
-    gap: 0.35rem !important;
+    gap: 0rem !important;
+  }}
+  
+  /* Force columns to sit tighter */
+  div[data-testid="column"] {{
+    margin-bottom: 0rem !important;
   }}
 
   /* Many Streamlit blocks wrap in element-container with bottom margin */
   .element-container {{
-    margin-bottom: 0.35rem !important;
+    margin-bottom: 0.2rem !important;
   }}
 
   /* Sections tighter on mobile */
@@ -800,8 +807,9 @@ with colL:
     else:
         st.info("Add story_left.jpg/.jpeg/.png/.webp in assets/")
 with colC:
-    # ✅ APPEND RESIZE_JS to fix gaps on mobile (but keep desktop height)
-    components.html(countdown_html + RESIZE_JS, height=720)
+    # ✅ HEIGHT=540 + AUTO_RESIZE_SCRIPT
+    # Safe height for mobile (prevents gap) but tall enough for desktop (prevents cropping)
+    components.html(countdown_html + AUTO_RESIZE_SCRIPT, height=540)
 with colR:
     if right_uri:
         st.image(right_uri, use_container_width=True)
@@ -1226,8 +1234,9 @@ if gal_uris:
 """,
         unsafe_allow_html=True,
     )
-    # ✅ APPEND RESIZE_JS to fix gaps on mobile
-    components.html(gallery_html + RESIZE_JS, height=560)
+    # ✅ HEIGHT=540 + AUTO_RESIZE_SCRIPT
+    # Safe height for mobile (prevents gap) but tall enough for desktop (prevents cropping)
+    components.html(gallery_html + AUTO_RESIZE_SCRIPT, height=540)
 else:
     st.markdown(
         """
