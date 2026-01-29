@@ -148,15 +148,13 @@ def wa_link(phone_e164: str, msg: str) -> str:
 AUTO_RESIZE_SCRIPT = """
 <script>
   function resizeIframe() {
-    // Get the exact height of the content
-    const height = document.body.scrollHeight;
-    // Send it to Streamlit to resize the container
+    const height = document.documentElement.scrollHeight || document.body.scrollHeight;
     window.parent.postMessage({type: 'streamlit:setFrameHeight', height: height}, '*');
   }
   // Check often to ensure it resizes correctly
   window.addEventListener('load', resizeIframe);
   window.addEventListener('resize', resizeIframe);
-  setInterval(resizeIframe, 500);
+  setInterval(resizeIframe, 1000);
 </script>
 """
 
@@ -376,19 +374,14 @@ div[data-testid="stFormSubmitButton"] button:hover {{
     background-attachment: scroll !important;
   }}
 
-  /* Reduce Streamlit default block gaps to 0 */
+  /* Reduce Streamlit default block gaps */
   div[data-testid="stVerticalBlock"] {{
-    gap: 0rem !important;
-  }}
-  
-  /* Force columns to sit tighter */
-  div[data-testid="column"] {{
-    margin-bottom: 0rem !important;
+    gap: 0.35rem !important;
   }}
 
   /* Many Streamlit blocks wrap in element-container with bottom margin */
   .element-container {{
-    margin-bottom: 0.2rem !important;
+    margin-bottom: 0.35rem !important;
   }}
 
   /* Sections tighter on mobile */
@@ -630,7 +623,7 @@ st.markdown(
 # =========================================================
 countdown_html = f"""
 <style>
-  html, body {{ margin:0; padding:0; }}
+  html, body {{ margin:0; padding:0; overflow: hidden; }} /* Added overflow:hidden */
 
   .cal-title {{
     text-align:center;
@@ -807,9 +800,8 @@ with colL:
     else:
         st.info("Add story_left.jpg/.jpeg/.png/.webp in assets/")
 with colC:
-    # ✅ HEIGHT=540 + AUTO_RESIZE_SCRIPT
-    # Safe height for mobile (prevents gap) but tall enough for desktop (prevents cropping)
-    components.html(countdown_html + AUTO_RESIZE_SCRIPT, height=540)
+    # ✅ RESTORED HEIGHT to 720 (Safe) + AUTO_RESIZE_SCRIPT to shrink blank space
+    components.html(countdown_html + AUTO_RESIZE_SCRIPT, height=720)
 with colR:
     if right_uri:
         st.image(right_uri, use_container_width=True)
@@ -1087,7 +1079,7 @@ if gal_uris:
 
     gallery_html = f"""
     <style>
-      html, body {{ margin:0; padding:0; }}
+      html, body {{ margin:0; padding:0; overflow: hidden; }} /* Added overflow:hidden */
 
       .wrap {{
         width: 100%;
@@ -1234,9 +1226,8 @@ if gal_uris:
 """,
         unsafe_allow_html=True,
     )
-    # ✅ HEIGHT=540 + AUTO_RESIZE_SCRIPT
-    # Safe height for mobile (prevents gap) but tall enough for desktop (prevents cropping)
-    components.html(gallery_html + AUTO_RESIZE_SCRIPT, height=540)
+    # ✅ RESTORED HEIGHT to 560 (Safe) + AUTO_RESIZE_SCRIPT to shrink blank space
+    components.html(gallery_html + AUTO_RESIZE_SCRIPT, height=560)
 else:
     st.markdown(
         """
