@@ -143,6 +143,19 @@ def audio_uri_mp3(path: Path) -> str:
 def wa_link(phone_e164: str, msg: str) -> str:
     return f"https://wa.me/{phone_e164}?text={quote(msg)}"
 
+# ✅ ADDED: Auto-resize script (This helps fix gaps if supported)
+AUTO_RESIZE_SCRIPT = """
+<script>
+  function resizeIframe() {
+    const body = document.body;
+    const height = body.scrollHeight;
+    window.parent.postMessage({type: 'streamlit:setFrameHeight', height: height}, '*');
+  }
+  window.addEventListener('load', resizeIframe);
+  window.addEventListener('resize', resizeIframe);
+  setTimeout(resizeIframe, 300);
+</script>
+"""
 
 # =========================================================
 # Page
@@ -584,7 +597,8 @@ else:
       </script>
     </div>
     """
-    components.html(hero_html, height=600)
+    # ✅ FIX: height=600 (RESTORED) + append auto-resize script
+    components.html(hero_html + AUTO_RESIZE_SCRIPT, height=600)
 
 # =========================================================
 # INTRO
@@ -785,7 +799,8 @@ with colL:
     else:
         st.info("Add story_left.jpg/.jpeg/.png/.webp in assets/")
 with colC:
-    components.html(countdown_html, height=720)
+    # ✅ FIX: height=720 (RESTORED) + append auto-resize script
+    components.html(countdown_html + AUTO_RESIZE_SCRIPT, height=720)
 with colR:
     if right_uri:
         st.image(right_uri, use_container_width=True)
@@ -927,13 +942,11 @@ st.markdown(
 # =========================================================
 GIFT_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 130">
   <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Left envelope -->
     <rect x="22" y="46" width="86" height="58" rx="10" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
     <path d="M22 54 L65 84 L108 54" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
     <path d="M22 104 L60 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
     <path d="M108 104 L70 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
 
-    <!-- Heart left -->
     <path d="M65 75
              C62 69 54 69 54 76
              C54 83 65 90 65 90
@@ -941,13 +954,11 @@ GIFT_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 130
              C76 69 68 69 65 75 Z"
           fill="{THEME_ACCENT}" opacity="0.55" stroke="none"/>
 
-    <!-- Right envelope -->
     <rect x="132" y="46" width="86" height="58" rx="10" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
     <path d="M132 54 L175 84 L218 54" stroke="{THEME_ACCENT}" stroke-width="2.6" opacity="0.95"/>
     <path d="M132 104 L170 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
     <path d="M218 104 L180 78" stroke="{THEME_ACCENT}" stroke-width="2.2" opacity="0.6"/>
 
-    <!-- Heart right -->
     <path d="M175 75
              C172 69 164 69 164 76
              C164 83 175 90 175 90
@@ -955,7 +966,6 @@ GIFT_ICON_SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 130
              C186 69 178 69 175 75 Z"
           fill="{THEME_ACCENT}" opacity="0.55" stroke="none"/>
 
-    <!-- Soft outline accent -->
     <path d="M60 46 Q65 36 75 36" stroke="{THEME_TEXT}" stroke-width="2.0" opacity="0.25"/>
     <path d="M180 46 Q175 36 165 36" stroke="{THEME_TEXT}" stroke-width="2.0" opacity="0.25"/>
   </g>
@@ -1215,7 +1225,8 @@ if gal_uris:
 """,
         unsafe_allow_html=True,
     )
-    components.html(gallery_html, height=560)
+    # ✅ FIX: height=560 (RESTORED) + append auto-resize script
+    components.html(gallery_html + AUTO_RESIZE_SCRIPT, height=560)
 else:
     st.markdown(
         """
